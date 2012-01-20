@@ -88,6 +88,12 @@
 	</fieldset>
 	<?php endif; ?>
 	
+	<fieldset>
+		<legend>Custom</legend>
+	
+		<?php echo Meta::render_fields('user', $this->auth->user_id()); ?>
+	</fieldset>
+	
 	<div class="submits">
 		<input type="submit" name="submit" value="<?php echo lang('bf_action_save') ?> " /> <?php echo lang('bf_or') ?> <?php echo anchor(SITE_AREA .'/settings/users', lang('bf_action_cancel')); ?>
 	</div>

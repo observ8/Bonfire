@@ -116,6 +116,66 @@ class Meta_model extends BF_Model {
 	
 	//--------------------------------------------------------------------
 	
+	public function find($id=null, $module=null) 
+	{
+		if (!is_numeric($id) || empty($module))
+		{
+			$this->error = 'Insufficient data.';
+			return false;
+		}
+		
+		$this->prep_module($module);
+		
+		return parent::find($id);
+	}
+	
+	//--------------------------------------------------------------------
+	
+	public function find_all($module=null) 
+	{
+		if (empty($module))
+		{
+			$this->error = 'Insufficient data.';
+			return false;
+		}
+		
+		$this->prep_module($module);
+		
+		return parent::find_all();
+	}
+	
+	//--------------------------------------------------------------------
+	
+	public function find_all_by($field=null, $value=null, $module=null) 
+	{
+		if (empty($field) || empty($module))
+		{
+			$this->error = 'Insufficient data.';
+			return false;
+		}
+		
+		$this->prep_module($module);
+		
+		return parent::find_all_by($field, $value);
+	}
+	
+	//--------------------------------------------------------------------
+	
+	public function find_by($field=null, $value=null, $module=null, $type='and') 
+	{
+		if (empty($field) || empty($module))
+		{
+			$this->error = 'Insufficient data.';
+			return false;
+		}
+		
+		$this->prep_module($module);
+		
+		return parent::find_by($field, $value);
+	}
+	
+	//--------------------------------------------------------------------
+	
 	/*
 		Method: find_by_key()
 		
@@ -224,13 +284,43 @@ class Meta_model extends BF_Model {
 			return false;
 		}
 		
-		$this->prepare_module($module);
+		$this->prep_module($module);
 		
 		$fields = array(
 			$this->key	=> $foreign_key
 		);
-		
+		dump($fields);
 		return parent::find_all_by($fields, null, 'and');
+	}
+	
+	//--------------------------------------------------------------------
+	
+	public function count_all($module=null) 
+	{
+		if (empty($module))
+		{
+			$this->error = 'Insufficient data.';
+			return false;
+		}
+		
+		$this->prep_module($module);
+		
+		return parent::count_all();
+	}
+	
+	//--------------------------------------------------------------------
+	
+	public function count_by($field=null, $value=null, $module=null) 
+	{
+		if (empty($module) || empty($field))
+		{
+			$this->error = 'Insufficient data.';
+			return false;
+		}
+		
+		$this->prepare_module($module);
+		
+		return parent::count_by($field, $value);
 	}
 	
 	//--------------------------------------------------------------------
@@ -293,6 +383,45 @@ class Meta_model extends BF_Model {
 	
 	//--------------------------------------------------------------------
 	
+	/*
+		Method: find_all_fields()
+		
+		Finds all custom fields for the current module.
+		
+		Parameters:
+			$module	- The name of the module to get information about.
+			
+		Returns:
+			An array of field information, or FALSE.
+	*/
+	public function find_all_fields($module=null)
+	{
+		if (empty($module))
+		{
+			$this->error = 'No module found.';
+			return false;
+		}
+		
+		$this->prep_module($module);
+		
+		$this->set_selects();
+		
+		$this->db->from($this->field_table);
+		
+		$query = $this->db->get();
+		
+		if (!empty($query) && $query->num_rows() > 0)
+		{
+			return $query->result();
+		}
+		
+		$this->error = $this->lang->line('bf_model_bad_select');
+		$this->logit('['. get_class($this) .': '. __METHOD__ .'] '. $this->lang->line('bf_model_bad_select'));
+		return false;
+	}
+	
+	//--------------------------------------------------------------------
+	
 
 	//--------------------------------------------------------------------
 	// !Module Setup/Teardown methods
@@ -330,53 +459,58 @@ class Meta_model extends BF_Model {
 		if (!$this->db->table_exists($module .'_fields'))
 		{ 
 			$fields = array(
-				'field_id'	=> array(
+				'id'	=> array(
 					'type'			=> 'INT',
 					'constraint'	=> 4,
 					'unsigned'		=> true,
 					'auto_increment'	=> true
 				),
-				'field_name'	=> array(
+				'name'	=> array(
 					'type'			=> 'varchar',
 					'constraint'	=> 32,
 				),
-				'field_label'	=> array(
+				'label'	=> array(
 					'type'			=> 'varchar',
 					'constraint'	=> 50
 				),
-				'field_order'	=> array(
+				'order'	=> array(
 					'type'			=> 'int',
 					'constraint'	=> 11,
 					'default'		=> 0
 				),
-				'field_desc'	=> array(
+				'desc'	=> array(
 					'type'		=> 'text',
 					'null'		=> true,
 				),
-				'field_type'	=> array(
+				'type'	=> array(
 					'type'			=> 'varchar',
 					'constraint'	=> 50
 				),
-				'field_options'	=> array(
+				'options'	=> array(
 					'type'		=> 'text',
 					'null'		=> true,
 				),
-				'field_width'	=> array(
+				'width'	=> array(
 					'type'			=> 'varchar',
 					'constraint'	=> 20,
 					'null'			=> true,
 				),
-				'field_default'	=> array(
+				'default'	=> array(
 					'type'			=> 'varchar',
 					'constraint'	=> 255,
 					'null'			=> true,
 				),
-				'field_required'	=> array(
+				'placeholder'	=> array(
+					'type'			=> 'varchar',
+					'constraint'	=> 255,
+					'null'			=> true,
+				),
+				'required'	=> array(
 					'type'			=> 'tinyint',
 					'constraint'	=> 1,
 					'default'		=> 0
 				),
-				'field_validators'	=> array(
+				'validators'	=> array(
 					'type'		=> 'text',
 					'null'		=> true,
 				),
@@ -390,7 +524,7 @@ class Meta_model extends BF_Model {
 				)
 			);
 			$this->dbforge->add_field($fields);
-			$this->dbforge->add_key('field_id', true);
+			$this->dbforge->add_key('id', true);
 	
 			$this->dbforge->create_table($module .'_fields');
 		}
@@ -478,7 +612,7 @@ class Meta_model extends BF_Model {
 	
 	//--------------------------------------------------------------------
 	
-	private function prep_module(&$module) 
+	public function prep_module(&$module) 
 	{	
 		// Prep the module name for use in table
 		$module = url_title($module, 'underscore', true);

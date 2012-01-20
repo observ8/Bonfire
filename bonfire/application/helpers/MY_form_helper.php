@@ -90,7 +90,7 @@ if (!function_exists('form_password'))
 
 if (!function_exists('form_url'))
 {
-	function form_password($data='', $value='', $label='', $extra='')
+	function form_url($data='', $value='', $label='', $extra='')
 	{
 		return _form_common('url', $data, $value, $label, $extra);
 	}

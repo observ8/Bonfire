@@ -110,7 +110,7 @@ class Settings extends Admin_Controller {
 
 		$this->load->library('ui/dataset');
 		$this->dataset->set_source('user_model', 'find_all');
-		$this->dataset->set_selects('users.id, users.role_id, username, first_name, last_name, email, last_login, banned, users.deleted, role_name');
+		$this->dataset->set_selects('users.id, users.role_id, username, display_name, email, last_login, banned, users.deleted, role_name');
 
 		$columns = array(
 			array(
@@ -122,8 +122,7 @@ class Settings extends Admin_Controller {
 				'field'		=> 'username',
 			),
 			array(
-				'field'		=> array('first_name', 'last_name'),
-				'title'		=> 'Name'
+				'field'		=> 'display_name',
 			),
 			array(
 				'field'		=> 'email',
@@ -188,6 +187,7 @@ class Settings extends Admin_Controller {
 		$this->load->config('address');
 		$this->load->helper('address');
 		$this->load->helper('form');
+		$this->load->library('meta/meta');
 
 		$user_id = $this->uri->segment(5);
 		if (empty($user_id))
@@ -412,11 +412,11 @@ class Settings extends Admin_Controller {
 		{
 			$required = 'required|';
 		}
-		$this->form_validation->set_rules('first_name', lang('us_first_name'), $required.'trim|strip_tags|max_length[20]|xss_clean');
-		$this->form_validation->set_rules('last_name', lang('us_last_name'), $required.'trim|strip_tags|max_length[20]|xss_clean');
 
 		if  ( ! $this->settings_lib->item('auth.use_extended_profile'))
 		{
+			$this->form_validation->set_rules('first_name', lang('us_first_name'), $required.'trim|strip_tags|max_length[20]|xss_clean');
+			$this->form_validation->set_rules('last_name', lang('us_last_name'), $required.'trim|strip_tags|max_length[20]|xss_clean');
 			$this->form_validation->set_rules('street1', 'Street 1', 'trim|strip_tags|xss_clean');
 			$this->form_validation->set_rules('street2', 'Street 2', 'trim|strip_tags|xss_clean');
 			$this->form_validation->set_rules('city', 'City', 'trim|strip_tags|xss_clean');

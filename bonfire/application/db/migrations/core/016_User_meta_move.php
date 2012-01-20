@@ -20,52 +20,52 @@ class Migration_User_meta_move extends Migration {
 	);
 	private $default_fields = array(
 		'first_name'	=> array(
-			'field_label'	=> 'First Name',
-			'field_type'	=> 'text',
-			'field_validators'	=> 'trim|strip_tags|xss_clean',
-			'field_order'	=> 1	
+			'label'			=> 'First Name',
+			'type'			=> 'text',
+			'validators'	=> 'trim|strip_tags|xss_clean',
+			'order'			=> 1	
 		),
 		'last_name'	=> array(
-			'field_label'	=> 'Last Name',
-			'field_type'	=> 'text',
-			'field_validators'	=> 'trim|strip_tags|xss_clean',
-			'field_order'	=> 2
+			'label'			=> 'Last Name',
+			'type'			=> 'text',
+			'validators'	=> 'trim|strip_tags|xss_clean',
+			'order'			=> 2
 		),
 		'street_1'	=> array(
-			'field_label'	=> 'Address 1',
-			'field_type'	=> 'text',
-			'field_validators'	=> 'trim|strip_tags|xss_clean',
-			'field_order'	=> 3
+			'label'			=> 'Address 1',
+			'type'			=> 'text',
+			'validators'	=> 'trim|strip_tags|xss_clean',
+			'order'			=> 3
 		),
 		'street_2' => array(
-			'field_label'	=> 'Address 2',
-			'field_type'	=> 'text',
-			'field_validators'	=> 'trim|strip_tags|xss_clean',
-			'field_order'	=> 4
+			'label'			=> 'Address 2',
+			'type'			=> 'text',
+			'validators'	=> 'trim|strip_tags|xss_clean',
+			'order'			=> 4
 		),
 		'city'	=> array(
-			'field_label'	=> 'City',
-			'field_type'	=> 'text',
-			'field_validators'	=> 'trim|strip_tags|xss_clean',
-			'field_order'	=> 5
+			'label'			=> 'City',
+			'type'			=> 'text',
+			'validators'	=> 'trim|strip_tags|xss_clean',
+			'order'			=> 5
 		),
 		'zipcode'	=> array(
-			'field_label'	=> 'Postal Code',
-			'field_type'	=> 'text',
-			'field_validators'	=> 'trim|strip_tags|xss_clean',
-			'field_order'	=> 7
+			'label'			=> 'Postal Code',
+			'type'			=> 'text',
+			'validators'	=> 'trim|strip_tags|xss_clean',
+			'order'			=> 7
 		),
 		'state_code'	=> array(
-			'field_label'	=> 'State',
-			'field_type'	=> 'state',
-			'field_validators'	=> '',
-			'field_order'	=> 6
+			'label'			=> 'State',
+			'type'			=> 'state',
+			'validators'	=> '',
+			'order'			=> 6
 		),
 		'country_iso'	=> array(
-			'field_label'	=> 'Country',
-			'field_type'	=> 'country',
-			'field_validators'	=> 'trim|strip_tags|xss_clean',
-			'field_order'	=> 8
+			'label'			=> 'Country',
+			'type'			=> 'country',
+			'validators'	=> 'trim|strip_tags|xss_clean',
+			'order'			=> 8
 		)
 	);
 	
@@ -79,17 +79,15 @@ class Migration_User_meta_move extends Migration {
 	{
 		$this->load->dbforge();
 		
-		$this->load->model('meta/meta_model');
-		
-		$this->meta_model->setup_module_meta('User');
+		$this->setup_module_meta('User');
 		
 		/*
 			Backup our users table
 		*/
 		$this->load->dbutil();
 		
-		$filename = APPPATH .'db/backups/backup_meta_users_table.txt';
-		
+		$filename = APPPATH .'backup_meta_users_table.txt';
+
 		$prefs = array(
 			'tables'		=> $this->db->dbprefix .'users',
 			'format'		=> 'txt',
@@ -113,15 +111,28 @@ class Migration_User_meta_move extends Migration {
 		}
 		
 		/*
+			Create display_name field in users table
+		*/
+		$field = array(
+			'display_name'	=> array(
+				'type'			=> 'varchar',
+				'constraint'	=> 255,
+				'null'			=> false,
+				'default'		=> 'Unnamed'
+			)
+		);
+		$this->dbforge->add_column('users', $field);
+		
+		/*
 			Create our custom fields for the user.
 		*/
 		$field_ids = array();
 		
 		foreach ($this->default_fields as $field => $vals)
 		{
-			$vals['field_name']	= $field;
+			$vals['name']	= $field;
 		
-			$field_ids[$field] = $this->meta_model->insert_custom_field($vals, 'user');
+			$field_ids[$field] = $this->insert_custom_field($vals, 'user');
 		}
 		
 		/*
@@ -142,9 +153,21 @@ class Migration_User_meta_move extends Migration {
 					// We don't want to store the field if it doesn't exist in the user profile.
 					if (!empty($row->$field))
 					{
-						$this->meta_model->insert($field, $row->$field, 'user', $row->id, $field_ids[$field]);
+						$data = array(
+							'field_id'		=> $field_ids[$field],
+							$module .'_id'	=> $row->id,
+							'meta_key'		=> $field,
+							'meta_value'	=> $row->$field
+						);
+
+						$this->db->insert($this->table, $data);
+						
+						unset($data);
 					}
 				}
+				
+				// Set a default display name
+				$this->user_model->update_display_name();
 			}
 		}
 		
@@ -159,6 +182,7 @@ class Migration_User_meta_move extends Migration {
 				$this->dbforge->drop_column('users', $field);
 			}
 		}
+		unset($fields);
 	}
 	
 	//--------------------------------------------------------------------
@@ -178,4 +202,262 @@ class Migration_User_meta_move extends Migration {
 	
 	//--------------------------------------------------------------------
 	
+	//--------------------------------------------------------------------
+	// !META FUNCTIONS
+	//--------------------------------------------------------------------
+	// These functions were taken from the meta_model to make
+	// creating and removing the meta information simpler.
+	//
+	
+	/*
+		Method: setup_module_meta()
+		
+		Sets up a new module to have custom field information usable.
+		This sets up 2 new tables: 
+			
+			'*_fields'	- Holds the fields and their display information.
+			'*_meta'	- Holds the actual custom data.
+			
+		Parameters:
+			$module	- A string with the name of the module. This is the
+					  name that will be used for the table names. 
+					  
+		Returns:
+			true/false
+	*/
+	public function setup_module_meta($module=null) 
+	{
+		if (empty($module))
+		{
+			return false;
+		}
+		
+		$this->load->dbforge();
+		
+		$this->prep_module($module);
+
+		// Fields table
+		if (!$this->db->table_exists($module .'_fields'))
+		{ 
+			$fields = array(
+				'id'	=> array(
+					'type'			=> 'INT',
+					'constraint'	=> 4,
+					'unsigned'		=> true,
+					'auto_increment'	=> true
+				),
+				'name'	=> array(
+					'type'			=> 'varchar',
+					'constraint'	=> 32,
+				),
+				'label'	=> array(
+					'type'			=> 'varchar',
+					'constraint'	=> 50
+				),
+				'order'	=> array(
+					'type'			=> 'int',
+					'constraint'	=> 11,
+					'default'		=> 0
+				),
+				'desc'	=> array(
+					'type'		=> 'text',
+					'null'		=> true,
+				),
+				'type'	=> array(
+					'type'			=> 'varchar',
+					'constraint'	=> 50
+				),
+				'options'	=> array(
+					'type'		=> 'text',
+					'null'		=> true,
+				),
+				'width'	=> array(
+					'type'			=> 'varchar',
+					'constraint'	=> 20,
+					'null'			=> true,
+				),
+				'default'	=> array(
+					'type'			=> 'varchar',
+					'constraint'	=> 255,
+					'null'			=> true,
+				),
+				'placeholder'	=> array(
+					'type'			=> 'varchar',
+					'constraint'	=> 255,
+					'null'			=> true,
+				),
+				'required'	=> array(
+					'type'			=> 'tinyint',
+					'constraint'	=> 1,
+					'default'		=> 0
+				),
+				'validators'	=> array(
+					'type'		=> 'text',
+					'null'		=> true,
+				),
+				'created_on'	=> array(
+					'type'		=> 'datetime',
+					'null'		=> true
+				),
+				'modified_on'	=> array(
+					'type'		=> 'datetime',
+					'null'		=> true
+				)
+			);
+			$this->dbforge->add_field($fields);
+			$this->dbforge->add_key('id', true);
+	
+			$this->dbforge->create_table($module .'_fields');
+		}
+		
+		// Meta table
+		if (!$this->db->table_exists($module .'_meta'))
+		{	
+			$fields = array(
+				'meta_id'	=> array(
+					'type'			=> 'INT',
+					'constraint'	=> 20,
+					'unsigned'		=> true,
+					'auto_increment'	=> true
+				),
+				'field_id'	=> array(
+					'type'			=> 'INT',
+					'constraint'	=> 4,
+					'unsigned'		=> true,
+					'default'		=> 0
+				),
+				$module .'_id'	=> array(
+					'type'			=> 'INT',
+					'constraint'	=> 20,
+					'unsigned'		=> true,
+					'default'		=> 0
+				),
+				'meta_key'	=> array(
+					'type'			=> 'varchar',
+					'constraint'	=> 255,
+					'default'		=> ''
+				),
+				'meta_value' => array(
+					'type'		=> 'text',
+					'null'		=> true,
+				),
+				'created_on'	=> array(
+					'type'		=> 'datetime',
+					'null'		=> true
+				),
+				'modified_on'	=> array(
+					'type'		=> 'datetime',
+					'null'		=> true
+				)		
+			);
+			$this->dbforge->add_field($fields);
+			$this->dbforge->add_key('meta_id', TRUE);
+			
+			$this->dbforge->create_table($module .'_meta');
+		}
+		
+		return true;
+	}
+	
+	//--------------------------------------------------------------------
+	
+	/*
+		Method: remove_module_meta()
+		
+		Removes any meta/field tables from the database for a given module.
+		Intended to be used during migrations.
+		
+		Parameters:
+			$module	- A string with the module name
+		
+		Returns:
+			true/false
+	*/
+	public function remove_module_meta($module=null) 
+	{
+		if (empty($module))
+		{
+			$this->error = lang('meta_no_module');
+			return false;
+		}
+		
+		$this->load->dbforge();
+		
+		$this->prep_module($module);
+		
+		$this->dbforge->drop_table($module .'_fields');
+		$this->dbforge->drop_table($module .'_meta');
+		
+		return true;
+	}
+	
+	//--------------------------------------------------------------------
+	
+	/*
+		Method: insert_custom_field()
+		
+		Creates a new custom field entry for the specified module.
+		
+		The params array should be formatted as a series of key/value pairs
+		that match the following...
+		
+		$params = array(
+			'field_name'		=> '',	// The system name of the field. Required. No spaces.
+			'field_label'		=> '',	// The display name of the field. Required.
+			'field_order'		=> '',	// The display order. INT. Optional. Defaults to 0.
+			'field_desc'		=> '',	// Description of field. Used as a help string. Optional.
+			'field_type'		=> '',	// The type of field, ie 'text', 'dropdown', 'checkbox', etc.
+			'field_options'		=> '',	// Only needed for selects. A serialized set of options/values.
+			'field_width'		=> '',	// A string with the input width. Used for CSS display.
+			'field_default'		=> '',	// A default value. Optional.
+			'field_required'	=> '',	// Either 0 or 1 for not required/required. Defaults to 0.
+			'field_validators	=> ''	// A string with pipe-delimited validation rules. ie 'trim|xss_clean'.
+		);
+		
+		Parameters: 
+			$params	- An array of key/value pairs with the entries.
+			$module	- The module name.
+			
+		Returns: 
+			An int with the ID of the field or FALSE.
+	*/
+	public function insert_custom_field($params=null, $module=null) 
+	{
+		if (!is_array($params))
+		{
+			$this->error = 'No parameters found.';
+			return false;
+		}
+		
+		if (empty($module))
+		{
+			$this->error = 'No module found.';
+			return false;
+		}
+		
+		$this->prep_module($module);
+		
+		if ($this->db->insert($this->field_table, $params))
+		{
+			return $this->db->insert_id();
+		}
+		
+		return false;		
+	}
+	
+	//--------------------------------------------------------------------
+	
+	public function prep_module(&$module) 
+	{	
+		// Prep the module name for use in table
+		$module = url_title($module, 'underscore', true);
+		
+		// Setup the table to use
+		$this->table 		= $module .'_meta';
+		$this->field_table	= $module .'_fields';
+
+		$this->key = $module .'_id';
+	}
+	
+	//--------------------------------------------------------------------
 }
