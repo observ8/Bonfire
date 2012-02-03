@@ -33,6 +33,7 @@ $lang['bf_online']				= 'Online';
 $lang['bf_offline']				= 'Offline';
 $lang['bf_top_number']			= 'Items <em>per</em> page:';
 $lang['bf_top_number_help']		= 'When viewing reports, how many items should be listed at a time?';
+$lang['bf_home']				= 'Home';
 
 $lang['bf_security']			= 'Security';
 $lang['bf_login_type']			= 'Login Type';
@@ -70,6 +71,9 @@ $lang['bf_action_restore']		= 'Restore';
 $lang['bf_action_show']			= 'Show';
 $lang['bf_action_login']		= 'Login';
 $lang['bf_actions']				= 'Actions';
+$lang['bf_clear']				= 'Clear';
+$lang['bf_action_list']			= 'List';
+$lang['bf_action_create']		= 'Create';
 
 $lang['bf_do_check']			= 'Check for updates?';
 $lang['bf_do_check_edge']		= 'Must be enabled to see bleeding edge updates as well.';

@@ -41,8 +41,16 @@ $lang['us_log_edit_profile']		= 'updated their profile';
 
 $lang['us_deleted_users']			= 'Deleted Users';
 $lang['us_purge_del_accounts']		= 'Purge Deleted Accounts';
-$lang['us_purge_del_note']			= '<h3>Purge Deleted Accounts</h3><p>Purging deleted accounts is a permanent action. There is no going back, so please make sure.</p>';
-$lang['us_no_deleted']				= 'There are not any deleted users in the database.';
+$lang['us_purge_del_note']			= '<p>Purging deleted accounts is a permanent action. There is no going back, so please make sure.</p>';
+$lang['us_action_deleted']			= 'The User was successfully deleted.';
+$lang['us_action_not_deleted']		= 'We could not delete the user: ';
+$lang['us_delete_account']			= 'Delete Account';
+$lang['us_delete_account_note']		= '<h3>Delete this Account</h3><p>Deleting this account will revoke all of their privileges on the site.</p>';
+$lang['us_delete_account_confirm']	= 'Are you sure you want to delete this user account?';
+
+$lang['us_restore_account']			= 'Restore Account';
+$lang['us_restore_account_note']	= '<h3>Restore this Account</h3><p>Un-delete this user\'s account.</p>';
+$lang['us_restore_account_confirm']	= 'Restore this users account?';
 
 $lang['us_role']					= 'Role';
 $lang['us_role_lower']				= 'role';
@@ -67,9 +75,6 @@ $lang['us_state']					= 'State';
 $lang['us_no_states']				= 'There are no states/provences/counties/regions for this country. Create them in the address config file';
 $lang['us_country']					= 'Country';
 $lang['us_zipcode']					= 'Zipcode';
-$lang['us_delete_account']			= 'Delete this Account';
-$lang['us_delete_account_note']		= '<h3>Delete this Account</h3><p>Deleting this account will revoke all of their privileges on the site.</p>';
-$lang['us_delete_account_confirm']	= 'Are you sure you want to delete this user account?';
 
 $lang['us_user_management']			= 'User Management';
 $lang['us_email_in_use']			= 'The %s address is already in use. Please choose another.';
@@ -95,3 +100,5 @@ $lang['us_action_save']				= 'Save User';
 $lang['us_unauthorized']			= 'Unauthorized. Sorry you do not have the appropriate permission to manage the "%s" role.';
 $lang['us_empty_id']				= 'No userid provided. You must provide a userid to perform this action.';
 $lang['us_self_delete']				= 'Unauthorized. Sorry, you can not delete yourself.';
+
+$lang['us_filter_first_letter']		= 'Username starts with: ';

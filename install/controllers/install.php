@@ -95,6 +95,8 @@ class Install extends CI_Controller {
 	private $writeable_files = array(
 		'/bonfire/application/config/application.php'
 	);
+	
+	private $vdata = array();
 
 	//--------------------------------------------------------------------
 
@@ -124,7 +126,7 @@ class Install extends CI_Controller {
 		$view_data = array();
 		
 		$this->load->library('form_validation');
-		$this->form_validation->CI =& $this;
+		//$this->form_validation->CI =& $this;
 		$this->form_validation->set_rules('environment', lang('in_environment'), 'required|trim|strip_tags|xss_clean');
 		$this->form_validation->set_rules('hostname', lang('in_host'), 'required|trim|strip_tags|xss_clean');
 		$this->form_validation->set_rules('username', lang('bf_username'), 'required|trim|strip_tags|xss_clean');
@@ -168,7 +170,7 @@ class Install extends CI_Controller {
 				
 				if (!$db)
 				{
-					$view_data['message'] = message(lang('in_db_no_connect').': '. mysql_error(), 'error');
+					$this->vdata['error'] = lang('in_db_no_connect').': '. mysql_error();	
 				}
 				else
 				{
@@ -188,25 +190,25 @@ class Install extends CI_Controller {
 			}
 			else
 			{
-				$view_data['message'] = message(sprintf(lang('in_settings_save_error'), $environment), 'attention');
+				$this->vdata['attention'] = sprintf(lang('in_settings_save_error'), $environment);	
 			}
 		}
 		
 		$view_data['content'] = $this->load->view('install/index', $view_data, TRUE);
 	
-		$this->load->view('index', $view_data);
+		$this->load->view('install/index', $this->vdata);
 	}
 	
 	//--------------------------------------------------------------------
 	
 	public function account() 
 	{
-		$view_data = array();
-		
+		$view = 'install/account';
+	
 		if ($this->input->post('submit'))
 		{
 			$this->load->library('form_validation');
-			$this->form_validation->CI =& $this;
+			//$this->form_validation->CI =& $this;
 		
 			$this->form_validation->set_rules('site_title', lang('in_site_title'), 'required|trim|strip_tags|min_length[1]|xss_clean');
 			$this->form_validation->set_rules('username', lang('in_username'), 'required|trim|strip_tags|xss_clean');
@@ -218,27 +220,21 @@ class Install extends CI_Controller {
 			{
 				if ($this->setup())
 				{
-					$view_data['message'] = message(lang('in_success_notification'), 'success');
-					$view_data['content'] = $this->load->view('install/success', array(), TRUE);
+					$this->vdata['success'] = lang('in_success_notification');
+
+					$view = 'install/success';
 				}
 				else 
 				{
-					$view_data['message'] = message(lang('in_db_setup_error').': '. $this->errors, 'error');
+					$this->vdata['error']= lang('in_db_setup_error').': '. $this->errors;
 				}
 			}
 		}
 		
-		if (!isset($view_data['content']))
-		{
-			$account_data = array();
-			// if $this->curl_error = 1, show warning on "account" page of setup
-			$account_data['curl_error'] = $this->curl_error;
-			
-			$view_data['content'] = $this->load->view('install/account', $account_data, TRUE);
-		}
+        // if $this->curl_error = 1, show warning on "account" page of setup
+        $vdata['curl_error'] = $this->curl_error;
         
-        
-		$this->load->view('index', $view_data);
+		$this->load->view($view, $this->vdata);
 	}
 	
 	//--------------------------------------------------------------------
@@ -292,7 +288,11 @@ class Install extends CI_Controller {
 			$errors .= '<p>'.lang('in_writeable_files_message').':</p><ul>' . $file_errors .'</ul>';
 		}
 		
-		unset($folder_errors, $file_errors);
+		// Make it available to the template lib if there are errors
+		if (!empty($errors))
+		{
+			$this->vdata['startup_errors'] = $errors;
+		}
 		
 		return $errors;
 		

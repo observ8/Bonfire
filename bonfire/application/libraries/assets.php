@@ -205,9 +205,9 @@ class Assets {
 				'file'	=> $media,
 				'media'	=> $media
 			);
-
-			$styles = array_merge($styles, self::$styles);
-		}
+						
+			$styles = array_merge(self::$styles, $styles);
+		} 
 		// If an array has been passed, merge it with any added styles.
 		else if (is_array($style))
 		{

@@ -8,10 +8,10 @@
 	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 	copies of the Software, and to permit persons to whom the Software is
 	furnished to do so, subject to the following conditions:
-	
+
 	The above copyright notice and this permission notice shall be included in
 	all copies or substantial portions of the Software.
-	
+
 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -44,7 +44,8 @@ $lang['db_database']			= 'Database';
 $lang['db_drop']				= 'Drop';
 $lang['db_repair']				= 'Repair';
 $lang['db_optimize']			= 'Optimize';
-$lang['db_apply']			= 'Apply';
+$lang['db_apply']				= 'Apply';
+$lang['db_migrations']			= 'Migrations';
 
 $lang['db_delete_note']			= 'Delete selected backup files: ';
 $lang['db_no_backups']			= 'No previous backups were found.';
@@ -83,8 +84,16 @@ $lang['db_debug_on']			= 'Debug On';
 $lang['db_strict_mode']			= 'Strict Mode';
 $lang['db_running_on_1']		= 'You are currently running on the';
 $lang['db_running_on_2']		= 'server.';
+$lang['db_serv_dev']			= 'Development';
+$lang['db_serv_test']			= 'Testing';
+$lang['db_serv_prod']			= 'Production';
 
 $lang['db_successful_save']		= 'Your settings were successfully saved.';
 $lang['db_erroneous_save']		= 'There was an error saving the settings.';
 $lang['db_successful_save_act']	= 'Database settings were successfully saved';
 $lang['db_erroneous_save_act']	= 'Database settings did not save correctly';
+
+$lang['db_sql_query']			= 'SQL Query';
+$lang['db_total_results']		= 'Total Results';
+$lang['db_no_rows']				= 'No data found for table.';
+$lang['db_browse']				= 'Browse';

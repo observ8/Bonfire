@@ -29,9 +29,9 @@
 			</div>
 		</div>
 
-		<div class="submits">
-			<button type="submit" name="submit" class="button"><?php echo lang('db_restore'); ?></button> <?php echo lang('bf_or'); ?>
-			<a href="<?php echo site_url(SITE_AREA . '/developer/database/backups') ?>"><?php echo lang('bf_action_cancel'); ?></a>
+		<div class="actions">
+			<input type="submit" name="submit" class="btn primary" value="<?php echo lang('db_restore'); ?>" /> <?php echo lang('bf_or'); ?>
+			<a href="<?php echo site_url(SITE_AREA .'/developer/database/backups') ?>"><?php echo lang('bf_action_cancel'); ?></a>
 		</div>
 
 	<?php echo form_close(); ?>

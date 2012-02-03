@@ -32,6 +32,7 @@ class Developer extends Admin_Controller {
 		
 		$this->options = $this->config->item('modulebuilder');
 		
+		Template::set_block('sub_nav', 'developer/_sub_nav');
 	}
 
 	//---------------------------------------------------------------
@@ -44,9 +45,6 @@ class Developer extends Admin_Controller {
 	*/
 	public function index()
 	{
-		
-		Assets::add_js($this->load->view('developer/modulebuilder_js', null, true), 'inline');
-
 		$modules = module_list(true);
 		$configs = array();
 	
@@ -79,7 +77,7 @@ class Developer extends Admin_Controller {
 	*/
 	public function create()
 	{
-		Assets::add_js($this->load->view('developer/modulebuilder_js', null, true), 'inline');
+		Assets::add_module_js('modulebuilder', 'modulebuilder.js');
 		
 		$this->auth->restrict('Bonfire.Modules.Add');
 		

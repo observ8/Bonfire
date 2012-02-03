@@ -2,6 +2,10 @@
 
 class MY_Form_validation extends CI_Form_validation {
     
+    public $CI;
+    
+    //--------------------------------------------------------------------
+    
     /**
      * MY_Form_validation::__construct()
      * 
@@ -111,7 +115,37 @@ class MY_Form_validation extends CI_Form_validation {
 	}
 
 	// --------------------------------------------------------------------
+	
+	public function has_error($field=null) 
+	{
+		if (empty($field))
+		{
+			return false;
+		}
+		
+		return !empty($this->_field_data[$field]['error']) ? true : false;
+	}
+	
+	//--------------------------------------------------------------------
+	
 }
+
+//--------------------------------------------------------------------
+
+function form_has_error($field=null) 
+{
+	
+	if (FALSE === ($OBJ =& _get_validation_object()))
+	{
+		return false;
+	}
+	
+	$return = $OBJ->has_error($field);
+	
+	return $return;
+}
+
+//--------------------------------------------------------------------
 
 /* Author :  http://net.tutsplus.com/tutorials/php/6-codeigniter-hacks-for-the-masters/ */
 /* End of file : ./libraries/MY_Form_validation.php */

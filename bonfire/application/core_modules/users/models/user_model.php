@@ -220,7 +220,7 @@ class User_model extends BF_Model {
 		Returns:
 			An array of objects with each user's information.
 	*/
-	public function find_all($show_deleted=false) 
+	public function find_all($show_deleted=true) 
 	{
 		if (empty($this->selects))
 		{

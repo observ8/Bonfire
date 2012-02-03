@@ -969,7 +969,7 @@ class BF_Model extends CI_Model {
 		Access:
 			Private
 	*/
-	private function set_selects() 
+	protected function set_selects() 
 	{
 		if (!empty($this->selects))
 		{
@@ -991,7 +991,7 @@ class BF_Model extends CI_Model {
 			$message	- The string to write to the logs.
 			$level		- The log level, as per CI log_message method.
 	*/
-	private function logit($message='', $level='debug') 
+	protected function logit($message='', $level='debug') 
 	{
 		if (empty($message))
 		{

@@ -6,9 +6,6 @@ $config['module_config'] = array(
 					'persian' =>'سرعت بخشی به ایجاد کد اولیه افزونه'
 				),
 	'author'		=> 'Bonfire Team (mostly Sean)',
-	'name'			=> array(
-						'english' =>'Module Builder',
-						'persian' => 'ایجاد افزونه'
-					),
+	'name'			=> 'Module Builder',
 	'version'		=> '0.3.0',
 );

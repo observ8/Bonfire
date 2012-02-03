@@ -21,7 +21,7 @@ class Migration_Migration_schema_change extends Migration {
 			// the table is in the old format
 
 			// backup the schema_version table
-			$this->dbforge->rename_table($prefix.'schema_version', $prefix.'schema_version_old');
+			$this->dbforge->rename_table('schema_version', 'schema_version_old');
 
 			// modify the schema_version table
 			$fields = array(
@@ -71,7 +71,7 @@ class Migration_Migration_schema_change extends Migration {
 			// Reverse the schema_version table changes
 			$this->dbforge->drop_table('schema_version');
 
-			$this->dbforge->rename_table($prefix.'schema_version_old', $prefix.'schema_version');
+			$this->dbforge->rename_table('schema_version_old', 'schema_version');
 		}
 
 	}

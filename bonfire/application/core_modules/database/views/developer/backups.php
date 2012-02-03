@@ -1,7 +1,7 @@
 <br/>
 <?php if (isset($backups) && is_array($backups) && count($backups) > 0) : ?>
 	<?php echo form_open(SITE_AREA .'/developer/database/delete', array('style' => 'padding: 0')); ?>
-		<table cellspacing="0">
+		<table class="zebra-striped">
 			<thead>
 				<tr>
 					<th id="cb" class="column-check" style="width: 2em">
@@ -15,7 +15,7 @@
 				<tr>
 					<td colspan="3">
 						<?php echo lang('db_delete_note'); ?>
-						<button type="submit" name="submit" class="button"><?php echo lang('bf_action_delete'); ?></button>
+						<button type="submit" name="submit" class="btn danger"><?php echo lang('bf_action_delete'); ?></button>
 					</td>
 				</tr>
 			</tfoot>
@@ -37,9 +37,9 @@
 			<?php endforeach; ?>
 			</tbody>
 		</table>
-		
+
 		</form>
-	
+
 	<?php else : ?>
 		<div class="notification attention">
 			<p><?php echo lang('db_no_backups'); ?></p>

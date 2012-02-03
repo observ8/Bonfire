@@ -42,3 +42,12 @@ $lang['log_delete1_note']		= '<h3>Delete log file "%s"?</h3><p>Deleting log file
 $lang['log_not_found']			= 'Either the log file could not be located, or it was empty.';
 $lang['log_show_all_entries']	= 'All entries';
 $lang['log_show_errors']		= 'Errors only';
+
+$lang['log_date']				= 'Date';
+$lang['log_file']				= 'Filename';
+$lang['log_logs']				= 'Logs';
+$lang['log_settings']			= 'Settings';
+
+$lang['log_title']				= 'System Logs';
+$lang['log_title_settings']		= 'System Log Settings';
+$lang['log_deleted']			= 'Log files deleted';

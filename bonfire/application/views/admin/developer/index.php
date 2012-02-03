@@ -8,7 +8,7 @@
 
 <h2>System Information</h2>
 
-	<table cellspacing="0">
+	<table class="zebra-striped">
 		<tbody>
 			<tr>
 				<td>CodeIgniter Version</td>
@@ -89,7 +89,7 @@
 <h2>Installed Modules</h2>
 
 <?php if (isset($modules) && is_array($modules) && count($modules)) : ?>
-	<table>
+	<table class="zebra-striped">
 		<thead>
 			<tr>
 				<th>Name</th>

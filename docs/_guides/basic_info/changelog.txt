@@ -1,6 +1,16 @@
 Topic: Changelog
 
-Version 0.5-RC1 (Unreleased)
+Version 0.6A (Unreleased)
+
+Additions:
+- New UI functions: *render_filter_first_letter*.
+- New UI Libraries: *Contexts* for handling the new navigation, and *Dataset* for creating consistent table-based data layouts with pagination and bulk actions.
+- New Admin theme is a drastic tweak. Simplified so no more reliance on AJAX interface. Built on a modified version of Bootstrap.css, this theme is a responsive layout that can be used on smartphones, tablets, and your desktop computer.
+- New function in the application_helper: *e()* is a convenience function for echoing htmlentities($str) in views. Highly recommended to replace all uses of echo when the user would have entered the data.
+- New function in the application_helper: *array_implode()* allows imploding multi-dimensional arrays with proper glues for multiple level support.
+- Template libs theme_view() method now allows for mobile view overrides. 
+
+Version 0.5
 
 Additions:
 - Edit Profile for the front end user - issue #197
@@ -62,7 +72,7 @@ Enhancements:
 - Activities logged for more activities throughout Bonfire.
 - Added soft_deletes, created and modified fields to ModuleBuilder.
 - ModuleBuilder creates better localized files.
-- ModuleBuilder now automatcially runs the migration files for a new module.
+- ModuleBuilder now automatically runs the migration files for a new module.
 - Permission names are now allowed to be 255 chars long (up from 50).
 - where() method in MY_Model now accepts arrays or custom strings as parameter.
 - Better permissions in place to prevent users of other roles from modifying roles you don't want them to.

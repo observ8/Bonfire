@@ -7,8 +7,5 @@ $config['module_config'] = array(
 				),
 	'author'		=> 'Bonfire Team',
 	'version'		=> '0.1.0',
-        'name'          => array(
-					'english'       => 'Ui',
-					'persian'       => 'ناحیه کاربری'
-				)
+	'name'          => 'Ui'
 );
