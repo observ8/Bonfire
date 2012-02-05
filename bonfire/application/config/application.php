@@ -260,8 +260,8 @@ $config['assets.asset_folders'] = array(
 	to wrap all of your inline scripts into. By default, it is
 	setup to work with jQuery.
 */
-$config['assets.js_opener'] = 'head.ready(function(){'. "\n";
-$config['assets.js_closer'] = '});'. "\n";
+$config['assets.js_opener'] = '';
+$config['assets.js_closer'] = '';
  
 /*
 	The 'assets.combine' setting tells the Asset library whether

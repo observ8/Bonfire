@@ -27,7 +27,6 @@
 			<div class="container">
 				<h1 class="branding"><?php e(config_item('site.title')); ?></h1>
 			
-				<?php if(isset($shortcut_data) && is_array($shortcut_data['shortcuts']) && is_array($shortcut_data['shortcut_keys']) && count($shortcut_data['shortcut_keys'])):?><img src="<?php echo Template::theme_url('images/keyboard-icon.png') ?>" id="shortkeys_show" title="Keyboard Shortcuts" alt="Keyboard Shortcuts"/><?php endif;?>
 				<ul class="nav secondary-nav">
 					<li class="dropdown">
 						<a href="<?php echo site_url(SITE_AREA .'/settings/users/edit/'. $this->auth->user_id()) ?>" id="tb_email" class="dropdown-toggle" title="<?php echo lang('bf_user_settings') ?>">
@@ -41,6 +40,7 @@
 						</ul>
 					</li>
 				</ul>
+				<?php if(isset($shortcut_data) && is_array($shortcut_data['shortcuts']) && is_array($shortcut_data['shortcut_keys']) && count($shortcut_data['shortcut_keys'])):?><img src="<?php echo Template::theme_url('images/keyboard-icon.png') ?>" id="shortkeys_show" title="Keyboard Shortcuts" alt="Keyboard Shortcuts"/><?php endif;?>
 				<?php echo Contexts::render_menu('both'); ?>
 			</div><!-- /container -->
 			<div style="clearfix"></div>
