@@ -1,6 +1,6 @@
 Topic: Changelog
 
-Version 0.6A (Unreleased)
+Version 0.6-dev (Unreleased)
 
 Additions:
 - New UI functions: *render_filter_first_letter*.
